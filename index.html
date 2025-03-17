@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operation Mirror Cloud</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Operation Mirror Cloud</h1>
+        <button onclick="reportTerrorist()">Сообщить о террористе</button>
+    </header>
+    
+    <main>
+        <section id="category-selection">
+            <h2>Выберите категорию:</h2>
+            <select id="categorySelect" onchange="loadCategory()">
+                <option value="">-- Выберите категорию --</option>
+                <option value="all">Все</option>
+                <option value="people">Люди</option>
+                <option value="vehicles">Транспорт</option>
+            </select>
+        </section>
+        
+        <section id="country-selection" style="display: none;">
+            <h2>Выберите страну:</h2>
+            <select id="countrySelect" onchange="loadData()">
+                <option value="">-- Выберите страну --</option>
+                <option value="all">Все страны</option>
+                <option value="Syria">Сирия</option>
+                <option value="Sudan">Судан</option>
+                <option value="Nigger">Ниггерия</option>
+            </select>
+        </section>
+        
+        <section id="results-list" style="display: none;">
+            <h2>Результаты поиска:</h2>
+            <input type="text" id="search" placeholder="Поиск..." onkeyup="searchResults()">
+            <div id="resultsContainer"></div>
+        </section>
+    </main>
+    
+    <script>
+        const data = {
+            "Syria": {
+                "people": [
+                    { name: "Unkown Name", image: "suspect_people/{4B551AA6-FDFA-4D05-A75D-09D4CC2B781D}.png", details: "Рост: 1.81-1.87, Чёрные Волосы Худощяв | Геноцид в Тартус и Латакия" },
+					{ name: "Unkown Name", image: "suspect_people/{4C5737BA-62D0-46D1-A07A-8868E329D7F6}.png", details: "Рост: 1.73-1.77, Рыжие Волосы Среднее Телосложение | Геноцид в Тартус и Латакия" },
+					{ name: "Unkown Name", image: "suspect_people/{8A4C53ED-5E0A-47FD-9266-0F64B1E196D7}.png", details: "Рост: 1.84-1.88, Крупное Телосложение | Геноцид в Тартус и Латакия" },
+					{ name: "Unkown Name", image: "suspect_people/{7711430C-F34F-4EB9-B750-88E594F82006}.png", details: "Рост: 1.81-1.87, Чёрные Волосы Худощяв | Оператор Геноцида в Тартус и Латакия" },
+					{ name: "Unkown Name", image: "suspect_people/{AF262C9E-D56C-4378-9E7A-A25BE979C728}.png", details: "Рост: 1.73-1.77, Рыжие Волосы Среднее Телосложение | Геноцид в Тартус и Латакия" },
+					{ name: "Unkown Name", image: "suspect_people/{B78C0954-686A-453B-95D9-C04A49AB9B36}.png", details: "Рост: 1.73-1.77, Чёрные Волосы Среднее Телосложение | Геноцид в Тартус и Латакия" },
+					{ name: "Unkown Name", image: "suspect_people/{D3A19C95-1C21-4A87-8E61-0621FA64DD2D}.png", details: "Рост: 1.73-1.78, Чёрные Волосы Худощяв | Геноцид в Тартус и Латакия" },
+					{ name: "Unkown Name", image: "suspect_people/{EAC584B8-C788-4AC3-9B6E-17FE62586344}.png", details: "Рост: 1.78-1.84, Каштановые Волосы Среднее Телосложение | Геноцид в Тартус и Латакия" }
+                ],
+                "vehicles": [
+                    { model: "Toyota Land Cruiser 2007 White", plate: "?????74??", image: "suspect_vehicles/{204C80FB-A22C-4DA2-93C0-CBF2EBCEAA71}.png", details: "Использовался для убийства с применением машины" },
+					{ model: "Kia Bongo 3 White", plate: "Unkown Plate", image: "suspect_vehicles/{134521EC-4382-4978-930A-8C22014846C4}.png", details: "Перевозка Боеприпасов и Террористов" }
+                ]
+            },
+            "Sudan": {
+                "people": [
+                    { name: "No Info", image: "suspect_people/undefined_person.png", details: "Undefined" }
+                ],
+                "vehicles": [
+                    { model: "No Info", plate: "No-404", image: "suspect_vehicles/undefined_vehicle.png", details: "No Vehicle Found" }
+                ]
+            },
+            "Nigger": {
+                "people": [
+                    { name: "No Info", image: "suspect_people/undefined_person.png", details: "Undefined" }
+                ],
+                "vehicles": [
+                    { model: "No Info", plate: "No-404", image: "suspect_vehicles/undefined_vehicle.png", details: "No Vehicle Found" }
+                ]
+            }
+        };
+
+        function loadCategory() {
+            const category = document.getElementById("categorySelect").value;
+            document.getElementById("country-selection").style.display = category ? "block" : "none";
+        }
+
+        function loadData() {
+            const country = document.getElementById("countrySelect").value;
+            const category = document.getElementById("categorySelect").value;
+            const resultsSection = document.getElementById("results-list");
+            const container = document.getElementById("resultsContainer");
+            container.innerHTML = "";
+            
+            if (category) {
+                resultsSection.style.display = "block";
+                if (country === "all") {
+                    Object.keys(data).forEach(cntry => {
+                        if (category === "all") {
+                            ["people", "vehicles"].forEach(cat => {
+                                data[cntry][cat].forEach(item => createCard(item, cat));
+                            });
+                        } else {
+                            data[cntry][category].forEach(item => createCard(item, category));
+                        }
+                    });
+                } else if (data[country]) {
+                    if (category === "all") {
+                        ["people", "vehicles"].forEach(cat => {
+                            data[country][cat].forEach(item => createCard(item, cat));
+                        });
+                    } else {
+                        data[country][category].forEach(item => createCard(item, category));
+                    }
+                }
+            } else {
+                resultsSection.style.display = "none";
+            }
+        }
+        
+        function createCard(item, category) {
+			const card = document.createElement("div");
+			card.className = "result-card";
+    
+			card.innerHTML = `
+				<img src="${item.image}" alt="${category === 'people' ? item.name : item.model}">
+				<h3>${category === 'people' ? item.name : item.model}</h3>
+				<p>${category === 'people' ? item.details : `<strong>Номер:</strong> ${item.plate}<br>${item.details}`}</p>
+			`;
+    
+			document.getElementById("resultsContainer").appendChild(card);
+		}
+
+        function searchResults() {
+            const query = document.getElementById("search").value.toLowerCase();
+            document.querySelectorAll(".result-card").forEach(card => {
+                card.style.display = card.innerText.toLowerCase().includes(query) ? "block" : "none";
+            });
+        }
+
+        function reportTerrorist() {
+            alert("Функция сообщения о террористе пока в разработке.");
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: black; 
+            color: white; 
+            text-align: center; 
+        }
+        header { 
+            padding: 20px; 
+            background: darkred; 
+        }
+        button { 
+            padding: 10px; 
+            background: red; 
+            border: none; 
+            color: white; 
+            cursor: pointer; 
+        }
+        select, input { 
+            padding: 10px; 
+            margin-top: 10px; 
+        }
+        .result-card { 
+            background: gray; 
+            padding: 10px; 
+            margin: 10px auto; 
+            width: 300px; 
+            border-radius: 10px; 
+        }
+        .result-card img { 
+            width: 100%; /* Автоматическая адаптация ширины */
+            height: auto; /* Сохранение пропорций */
+            max-width: 300px; /* Ограничение максимального размера */
+            max-height: 300px; /* Ограничение высоты */
+            border-radius: 10px; /* Закругленные края */
+        }
+    </style>
+</body>
+</html>
