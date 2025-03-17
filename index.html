@@ -162,20 +162,26 @@
             padding: 10px; 
             margin-top: 10px; 
         }
-        .result-card { 
-            background: gray; 
-            padding: 10px; 
-            margin: 10px auto; 
-            width: 300px; 
-            border-radius: 10px; 
-        }
-        .result-card img { 
-            width: 100%; /* Автоматическая адаптация ширины */
-            height: auto; /* Сохранение пропорций */
-            max-width: 300px; /* Ограничение максимального размера */
-            max-height: 300px; /* Ограничение высоты */
-            border-radius: 10px; /* Закругленные края */
-        }
+        #resultsContainer {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 20px;
+		}
+
+		.result-card { 
+			background: gray; 
+			padding: 10px; 
+			width: 300px; /* Фиксированная ширина */
+			border-radius: 10px; 
+			text-align: center; 
+		}
+
+		.result-card img { 
+			width: 100%; /* Картинка занимает всю ширину карточки */
+			height: auto; /* Автоматическая адаптация высоты */
+			border-radius: 10px; 
+		}
     </style>
 </body>
 </html>
