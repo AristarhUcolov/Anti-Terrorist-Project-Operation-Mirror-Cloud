@@ -366,7 +366,7 @@ function openDetailModal(item, category) {
                     <ul class="locations-list">
                         <li>Tartus, Syria (2025)</li>
                         <li>Latakia, Syria (2025)</li>
-                        <li>Damascus, Syria (2025)</li>
+                        <li>Syria (2025)</li>
                     </ul>
                 </div>
                 
