@@ -13,10 +13,10 @@ class Database {
                         risk: "high",
                         locations: ["Tartus", "Latakia"],
                         associates: ["4C5737BA-62D0-46D1-A07A-8868E329D7F6", "8A4C53ED-5E0A-47FD-9266-0F64B1E196D7"],
-                        lastSeen: "2025-03-15",
+                        lastSeen: "2025",
                         activities: [
-                            { date: "2025-03-15", location: "Tartus", description: "Participated in mass executions" },
-                            { date: "2025-02-28", location: "Latakia", description: "Commanded terrorist cell" }
+                            { date: "2025", location: "Tartus", description: "Participated in mass executions" },
+                            { date: "2025", location: "Latakia", description: "Commanded terrorist cell" }
                         ]
                     },
                     { 
@@ -27,10 +27,10 @@ class Database {
                         risk: "high",
                         locations: ["Tartus", "Aleppo"],
                         associates: ["4B551AA6-FDFA-4D05-A75D-09D4CC2B781D", "7711430C-F34F-4EB9-B750-88E594F82006"],
-                        lastSeen: "2025-02-20",
+                        lastSeen: "2025",
                         activities: [
-                            { date: "2025-02-20", location: "Aleppo", description: "Supervised weapons transport" },
-                            { date: "2025-01-15", location: "Tartus", description: "Participated in attacks on civilians" }
+                            { date: "2025", location: "Aleppo", description: "Supervised weapons transport" },
+                            { date: "2025", location: "Tartus", description: "Participated in attacks on civilians" }
                         ]
                     },
                     { 
@@ -41,9 +41,9 @@ class Database {
                         risk: "medium",
                         locations: ["Latakia"],
                         associates: ["4B551AA6-FDFA-4D05-A75D-09D4CC2B781D"],
-                        lastSeen: "2025-01-30",
+                        lastSeen: "2025",
                         activities: [
-                            { date: "2025-01-30", location: "Latakia", description: "Guarded terrorist facility" }
+                            { date: "2025", location: "Latakia", description: "Guarded terrorist facility" }
                         ]
                     }
                 ],
@@ -55,12 +55,12 @@ class Database {
                         image: "suspect_vehicles/{204C80FB-A22C-4DA2-93C0-CBF2EBCEAA71}.png", 
                         details: "Used for killings with a Land Cruiser type vehicle and ammunition transport - 2025",
                         risk: "high",
-                        locations: ["Tartus", "Damascus"],
+                        locations: ["Tartus", "Syria"],
                         associatedPeople: ["4B551AA6-FDFA-4D05-A75D-09D4CC2B781D"],
-                        lastSeen: "2025-03-10",
+                        lastSeen: "2025",
                         activities: [
-                            { date: "2025-03-10", location: "Tartus", description: "Used in attack on military checkpoint" },
-                            { date: "2025-02-15", location: "Damascus", description: "Spotted transporting weapons" }
+                            { date: "2025", location: "Tartus", description: "Used in attack on military checkpoint" },
+                            { date: "2025", location: "Syria", description: "Spotted transporting weapons" }
                         ]
                     },
                     { 
@@ -72,9 +72,9 @@ class Database {
                         risk: "medium",
                         locations: ["Latakia"],
                         associatedPeople: ["4C5737BA-62D0-46D1-A07A-8868E329D7F6"],
-                        lastSeen: "2025-02-05",
+                        lastSeen: "2025",
                         activities: [
-                            { date: "2025-02-05", location: "Latakia", description: "Used for transporting fighters" }
+                            { date: "2025", location: "Latakia", description: "Used for transporting fighters" }
                         ]
                     }
                 ],
@@ -87,7 +87,7 @@ class Database {
                         description: "Active terrorist cell operating in western Syria",
                         members: ["4B551AA6-FDFA-4D05-A75D-09D4CC2B781D", "4C5737BA-62D0-46D1-A07A-8868E329D7F6"],
                         locations: ["Tartus", "Latakia"],
-                        lastActivity: "2025-03-15"
+                        lastActivity: "2025"
                     }
                 ]
             },
