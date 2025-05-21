@@ -3,184 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operation Mirror Cloud</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Operation Mirror Cloud | Anti-Terrorist Database</title>
+    <meta name="description" content="Global anti-terrorist database and monitoring system">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/themes.css">
+    <link rel="stylesheet" href="styles/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oxanium:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
 </head>
-<body>
-    <header>
-        <h1>Operation Mirror Cloud</h1>
-        <button onclick="reportTerrorist()">Сообщить о террористе</button>
-    </header>
+<body class="dark-theme">
+    <!-- Системные уведомления -->
+    <div id="system-alerts"></div>
     
-    <main>
-        <section id="category-selection">
-            <h2>Выберите категорию:</h2>
-            <select id="categorySelect" onchange="loadCategory()">
-                <option value="">-- Выберите категорию --</option>
-                <option value="all">Все</option>
-                <option value="people">Люди</option>
-                <option value="vehicles">Транспорт</option>
-            </select>
+    <!-- Главное меню -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-database"></i>
+                    <div class="pulse-effect"></div>
+                </div>
+                <h1 class="logo-text">
+                    <span class="logo-primary">OPERATION</span>
+                    <span class="logo-secondary">MIRROR CLOUD</span>
+                </h1>
+                <div class="system-status">
+                    <span class="status-indicator active"></span>
+                    <span class="status-text">ONLINE</span>
+                </div>
+            </div>
+            
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" class="nav-link active" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-section="database"><i class="fas fa-database"></i> Database</a></li>
+                    <li><a href="#" class="nav-link" data-section="analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                    <li><a href="#" class="nav-link" data-section="map"><i class="fas fa-map-marked-alt"></i> Global Map</a></li>
+                    <li><a href="#" class="nav-link" data-section="report"><i class="fas fa-exclamation-triangle"></i> Report</a></li>
+                </ul>
+            </nav>
+            
+            <div class="user-controls">
+                <button id="theme-toggle" class="icon-button" title="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <span class="user-name">Guest</span>
+                    <span class="user-level">Level 1 Access</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основное содержимое -->
+    <main class="main-content">
+        <!-- Дашборд -->
+        <section id="dashboard-section" class="content-section active">
+            <div class="dashboard-grid">
+                <div class="dashboard-card wide">
+                    <div class="card-header">
+                        <h2><i class="fas fa-globe-americas"></i> Global Threat Overview</h2>
+                        <div class="card-controls">
+                            <button class="icon-button"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="world-map-container">
+                            <div class="map-placeholder">
+                                <i class="fas fa-map"></i>
+                                <p>Interactive Threat Map Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-user-secret"></i> Top Wanted</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="top-wanted-list">
+                            <!-- Динамически заполняется через JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-car"></i> Suspicious Vehicles</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="vehicles-list">
+                            <!-- Динамически заполняется через JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-chart-pie"></i> Statistics</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="stats-container">
+                            <!-- Динамически заполняется через JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-bell"></i> Recent Alerts</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="alerts-list">
+                            <!-- Динамически заполняется через JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
         
-        <section id="country-selection" style="display: none;">
-            <h2>Выберите страну:</h2>
-            <select id="countrySelect" onchange="loadData()">
-                <option value="">-- Выберите страну --</option>
-                <option value="all">Все страны</option>
-                <option value="Syria">Сирия</option>
-                <option value="Sudan">Судан</option>
-                <option value="Nigger">Ниггерия</option>
-            </select>
+        <!-- База данных -->
+        <section id="database-section" class="content-section">
+            <div class="database-toolbar">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="database-search" placeholder="Search suspects, vehicles, locations...">
+                </div>
+                
+                <div class="filter-container">
+                    <div class="filter-group">
+                        <label for="country-filter"><i class="fas fa-flag"></i> Country:</label>
+                        <select id="country-filter" multiple>
+                            <option value="all" selected>All Countries</option>
+                            <option value="Syria">Syria</option>
+                            <option value="Sudan">Sudan</option>
+                            <option value="Nigeria">Nigeria</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="category-filter"><i class="fas fa-tags"></i> Category:</label>
+                        <select id="category-filter" multiple>
+                            <option value="all" selected>All Categories</option>
+                            <option value="people">People</option>
+                            <option value="vehicles">Vehicles</option>
+                            <option value="organizations">Organizations</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="risk-filter"><i class="fas fa-skull"></i> Risk Level:</label>
+                        <select id="risk-filter" multiple>
+                            <option value="all" selected>All Levels</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    
+                    <button id="apply-filters" class="primary-button">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                    <button id="reset-filters" class="secondary-button">
+                        <i class="fas fa-broom"></i> Reset
+                    </button>
+                </div>
+            </div>
+            
+            <div class="database-results">
+                <div class="results-header">
+                    <h3>Search Results: <span id="results-count">0</span> records found</h3>
+                    <div class="view-controls">
+                        <button class="view-toggle active" data-view="grid"><i class="fas fa-th"></i></button>
+                        <button class="view-toggle" data-view="list"><i class="fas fa-list"></i></button>
+                    </div>
+                </div>
+                
+                <div id="results-container" class="grid-view">
+                    <!-- Динамически заполняется через JS -->
+                </div>
+                
+                <div class="pagination-controls">
+                    <button id="prev-page" disabled><i class="fas fa-chevron-left"></i> Previous</button>
+                    <div class="page-numbers">
+                        <span class="current-page">1</span> of <span class="total-pages">1</span>
+                    </div>
+                    <button id="next-page" disabled>Next <i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
         </section>
         
-        <section id="results-list" style="display: none;">
-            <h2>Результаты поиска:</h2>
-            <input type="text" id="search" placeholder="Поиск..." onkeyup="searchResults()">
-            <div id="resultsContainer"></div>
+        <!-- Аналитика -->
+        <section id="analytics-section" class="content-section">
+            <div class="analytics-grid">
+                <div class="analytics-card wide">
+                    <div class="card-header">
+                        <h2><i class="fas fa-chart-bar"></i> Threat Activity Over Time</h2>
+                        <div class="time-filter">
+                            <select id="analytics-time-range">
+                                <option value="7d">Last 7 Days</option>
+                                <option value="30d" selected>Last 30 Days</option>
+                                <option value="90d">Last 90 Days</option>
+                                <option value="1y">Last Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="activity-timeline-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-globe-africa"></i> Threat By Region</h2>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="region-distribution-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-user-tag"></i> Suspect Categories</h2>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="category-distribution-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="analytics-card wide">
+                    <div class="card-header">
+                        <h2><i class="fas fa-project-diagram"></i> Network Connections</h2>
+                        <div class="graph-controls">
+                            <button id="reset-graph" class="icon-button"><i class="fas fa-crosshairs"></i></button>
+                            <button id="zoom-in-graph" class="icon-button"><i class="fas fa-search-plus"></i></button>
+                            <button id="zoom-out-graph" class="icon-button"><i class="fas fa-search-minus"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div id="network-graph-container"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Карта -->
+        <section id="map-section" class="content-section">
+            <div class="map-toolbar">
+                <div class="map-controls">
+                    <button id="map-zoom-in" class="icon-button"><i class="fas fa-search-plus"></i></button>
+                    <button id="map-zoom-out" class="icon-button"><i class="fas fa-search-minus"></i></button>
+                    <button id="map-reset" class="icon-button"><i class="fas fa-globe"></i></button>
+                </div>
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <span class="legend-color high-risk"></span>
+                        <span>High Risk</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color medium-risk"></span>
+                        <span>Medium Risk</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color low-risk"></span>
+                        <span>Low Risk</span>
+                    </div>
+                </div>
+                <div class="map-layers">
+                    <label><input type="checkbox" id="show-people-layer" checked> People</label>
+                    <label><input type="checkbox" id="show-vehicles-layer" checked> Vehicles</label>
+                    <label><input type="checkbox" id="show-organizations-layer"> Organizations</label>
+                </div>
+            </div>
+            <div id="world-map"></div>
+            <div class="map-sidebar">
+                <h3><i class="fas fa-info-circle"></i> Location Details</h3>
+                <div id="map-details-content">
+                    <p>Click on any marker to view details</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Отчеты -->
+        <section id="report-section" class="content-section">
+            <div class="report-container">
+                <div class="report-form-container">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Report Suspicious Activity</h2>
+                    <form id="report-form">
+                        <div class="form-group">
+                            <label for="report-type">Report Type</label>
+                            <select id="report-type" required>
+                                <option value="">Select report type</option>
+                                <option value="person">Suspicious Person</option>
+                                <option value="vehicle">Suspicious Vehicle</option>
+                                <option value="activity">Suspicious Activity</option>
+                                <option value="location">Suspicious Location</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="report-country">Country</label>
+                            <select id="report-country" required>
+                                <option value="">Select country</option>
+                                <option value="Syria">Syria</option>
+                                <option value="Sudan">Sudan</option>
+                                <option value="Nigeria">Nigeria</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="report-city">City/Region</label>
+                            <input type="text" id="report-city" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="report-date">Date of Observation</label>
+                            <input type="date" id="report-date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="report-description">Detailed Description</label>
+                            <textarea id="report-description" rows="5" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="report-media">Upload Media (Photos/Videos)</label>
+                            <input type="file" id="report-media" multiple accept="image/*,video/*">
+                            <div id="media-preview" class="media-preview"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="report-contact">Your Contact (Optional)</label>
+                            <input type="text" id="report-contact">
+                            <p class="help-text">For follow-up questions (will be kept confidential)</p>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="primary-button"><i class="fas fa-paper-plane"></i> Submit Report</button>
+                            <button type="reset" class="secondary-button"><i class="fas fa-undo"></i> Reset</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="report-guide-container">
+                    <h2><i class="fas fa-question-circle"></i> Reporting Guidelines</h2>
+                    <div class="guide-content">
+                        <h3>What to report:</h3>
+                        <ul>
+                            <li>Persons matching database entries</li>
+                            <li>Suspicious vehicles or license plates</li>
+                            <li>Unusual activities or gatherings</li>
+                            <li>Potential terrorist training camps</li>
+                            <li>Weapons or explosive caches</li>
+                        </ul>
+                        
+                        <h3>Safety first:</h3>
+                        <ul>
+                            <li>Do not approach suspicious individuals</li>
+                            <li>Maintain a safe distance</li>
+                            <li>Do not put yourself in danger to get photos</li>
+                            <li>Report from a secure location</li>
+                        </ul>
+                        
+                        <h3>Information to include:</h3>
+                        <ul>
+                            <li>Exact location (GPS coordinates if possible)</li>
+                            <li>Date and time of observation</li>
+                            <li>Detailed physical descriptions</li>
+                            <li>Vehicle make, model, and plate numbers</li>
+                            <li>Number of individuals involved</li>
+                        </ul>
+                        
+                        <div class="emergency-notice">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Emergency Situations</h3>
+                            <p>If you believe there is an immediate threat:</p>
+                            <button id="call-emergency" class="danger-button">
+                                <i class="fas fa-phone-alt"></i> Contact Local Authorities Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     </main>
     
-    <script>
-        const data = {
-            "Syria": {
-                "people": [
-                    { name: "Unkown Name", image: "suspect_people/{4B551AA6-FDFA-4D05-A75D-09D4CC2B781D}.png", details: "Рост: 1.81-1.87, Чёрные Волосы Худощав | Геноцид в Тартус и Латакия" },
-					{ name: "Unkown Name", image: "suspect_people/{4C5737BA-62D0-46D1-A07A-8868E329D7F6}.png", details: "Рост: 1.73-1.77, Рыжие Волосы Среднее Телосложение | Геноцид в Тартус и Латакия - 2025 год" },
-					{ name: "Unkown Name", image: "suspect_people/{8A4C53ED-5E0A-47FD-9266-0F64B1E196D7}.png", details: "Рост: 1.84-1.88, Крупное Телосложение | Геноцид в Тартус и Латакия - 2025 год" },
-					{ name: "Unkown Name", image: "suspect_people/{7711430C-F34F-4EB9-B750-88E594F82006}.png", details: "Рост: 1.81-1.87, Чёрные Волосы Худощав | Оператор Геноцида в Тартус и Латакия - 2025 год" },
-					{ name: "Unkown Name", image: "suspect_people/{AF262C9E-D56C-4378-9E7A-A25BE979C728}.png", details: "Рост: 1.73-1.77, Рыжие Волосы Среднее Телосложение | Геноцид в Тартус и Латакия - 2025 год" },
-					{ name: "Unkown Name", image: "suspect_people/{B78C0954-686A-453B-95D9-C04A49AB9B36}.png", details: "Рост: 1.73-1.77, Чёрные Волосы Среднее Телосложение | Геноцид в Тартус и Латакия - 2025 год" },
-					{ name: "Unkown Name", image: "suspect_people/{D3A19C95-1C21-4A87-8E61-0621FA64DD2D}.png", details: "Рост: 1.73-1.78, Чёрные Волосы Худощав | Геноцид в Тартус и Латакия - 2025 год" },
-					{ name: "Unkown Name", image: "suspect_people/{EAC584B8-C788-4AC3-9B6E-17FE62586344}.png", details: "Рост: 1.78-1.84, Каштановые Волосы Среднее Телосложение | Геноцид в Тартус и Латакия - 2025 год" },
-					{ name: "Unkown Name", image: "suspect_people/{18784594-AF74-49FA-A3B5-7963F36CC075}.png", details: "Рост: 1.74-1.78, Вероятно ликвидирован, в случае если нет то: Чёрные Волосы, Среднее Телосложение | Убийство безоружных Пленных ( Военных Сирий ) в Алеппо 2024 год" }
-                ],
-                "vehicles": [
-                    { model: "Toyota Land Cruiser 2007 White", plate: "?????74??", image: "suspect_vehicles/{204C80FB-A22C-4DA2-93C0-CBF2EBCEAA71}.png", details: "Использовался для убийства с применением транспортного средства типа Land Cruiser и перевозки боеприпасов - 2025 год" },
-					{ model: "Kia Bongo 3 White", plate: "Unkown Plate", image: "suspect_vehicles/{134521EC-4382-4978-930A-8C22014846C4}.png", details: "Перевозка Боеприпасов и Террористов - 2025 год" }
-                ]
-            },
-            "Sudan": {
-                "people": [
-                    { name: "No Info", image: "suspect_people/undefined_person.png", details: "Undefined" }
-                ],
-                "vehicles": [
-                    { model: "No Info", plate: "No-404", image: "suspect_vehicles/undefined_vehicle.png", details: "No Vehicle Found" }
-                ]
-            },
-            "Nigger": {
-                "people": [
-                    { name: "No Info", image: "suspect_people/undefined_person.png", details: "Undefined" }
-                ],
-                "vehicles": [
-                    { model: "No Info", plate: "No-404", image: "suspect_vehicles/undefined_vehicle.png", details: "No Vehicle Found" }
-                ]
-            }
-        };
-
-        function loadCategory() {
-            const category = document.getElementById("categorySelect").value;
-            document.getElementById("country-selection").style.display = category ? "block" : "none";
-        }
-
-        function loadData() {
-            const country = document.getElementById("countrySelect").value;
-            const category = document.getElementById("categorySelect").value;
-            const resultsSection = document.getElementById("results-list");
-            const container = document.getElementById("resultsContainer");
-            container.innerHTML = "";
+    <!-- Подробная карточка -->
+    <div id="detail-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body">
+                <!-- Динамически заполняется через JS -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Экспорт данных -->
+    <div id="export-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body">
+                <h2><i class="fas fa-file-export"></i> Export Data</h2>
+                <div class="export-options">
+                    <div class="export-format">
+                        <h3>Select Format:</h3>
+                        <div class="format-options">
+                            <label>
+                                <input type="radio" name="export-format" value="pdf" checked>
+                                <div class="format-card">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span>PDF Report</span>
+                                </div>
+                            </label>
+                            <label>
+                                <input type="radio" name="export-format" value="csv">
+                                <div class="format-card">
+                                    <i class="fas fa-file-csv"></i>
+                                    <span>CSV Data</span>
+                                </div>
+                            </label>
+                            <label>
+                                <input type="radio" name="export-format" value="json">
+                                <div class="format-card">
+                                    <i class="fas fa-file-code"></i>
+                                    <span>JSON</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="export-content">
+                        <h3>Select Content:</h3>
+                        <div class="content-options">
+                            <label><input type="checkbox" id="export-profile" checked> Profile Information</label>
+                            <label><input type="checkbox" id="export-photos"> Photos</label>
+                            <label><input type="checkbox" id="export-locations"> Known Locations</label>
+                            <label><input type="checkbox" id="export-associates"> Known Associates</label>
+                            <label><input type="checkbox" id="export-activity"> Activity History</label>
+                        </div>
+                    </div>
+                    
+                    <div class="export-actions">
+                        <button id="generate-export" class="primary-button">
+                            <i class="fas fa-download"></i> Generate Export
+                        </button>
+                        <div id="export-progress" class="progress-bar" style="display: none;">
+                            <div class="progress-fill"></div>
+                            <span class="progress-text">Preparing export...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Сравнение профилей -->
+    <div id="compare-modal" class="modal">
+        <div class="modal-content wide-modal">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body">
+                <h2><i class="fas fa-not-equal"></i> Compare Profiles</h2>
+                <div class="compare-container">
+                    <div class="compare-item" id="compare-item-1">
+                        <div class="compare-header">
+                            <select class="compare-select">
+                                <option value="">Select first profile</option>
+                            </select>
+                        </div>
+                        <div class="compare-content">
+                            <p>Select a profile to compare</p>
+                        </div>
+                    </div>
+                    
+                    <div class="compare-divider">
+                        <button id="swap-profiles" class="icon-button" title="Swap profiles">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="compare-item" id="compare-item-2">
+                        <div class="compare-header">
+                            <select class="compare-select">
+                                <option value="">Select second profile</option>
+                            </select>
+                        </div>
+                        <div class="compare-content">
+                            <p>Select a profile to compare</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="compare-results" id="compare-results">
+                    <h3><i class="fas fa-chart-bar"></i> Comparison Results</h3>
+                    <div class="results-placeholder">
+                        <p>Select two profiles to see comparison results</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Подвал -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Operation Mirror Cloud</h4>
+                <p>Global Concept Project anti-terrorist monitoring system</p>
+                <p class="copyright">© 2025 All Rights Reserved</p>
+            </div>
             
-            if (category) {
-                resultsSection.style.display = "block";
-                if (country === "all") {
-                    Object.keys(data).forEach(cntry => {
-                        if (category === "all") {
-                            ["people", "vehicles"].forEach(cat => {
-                                data[cntry][cat].forEach(item => createCard(item, cat));
-                            });
-                        } else {
-                            data[cntry][category].forEach(item => createCard(item, category));
-                        }
-                    });
-                } else if (data[country]) {
-                    if (category === "all") {
-                        ["people", "vehicles"].forEach(cat => {
-                            data[country][cat].forEach(item => createCard(item, cat));
-                        });
-                    } else {
-                        data[country][category].forEach(item => createCard(item, category));
-                    }
-                }
-            } else {
-                resultsSection.style.display = "none";
-            }
-        }
-        
-        function createCard(item, category) {
-			const card = document.createElement("div");
-			card.className = "result-card";
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="https://github.com/AristarhUcolov/Anti-Terrorist-Project-Operation-Mirror-Cloud/blob/main/README.md">Documentation</a></li>
+                    <li><a href="https://github.com/AristarhUcolov/Anti-Terrorist-Project-Operation-Mirror-Cloud/blob/main/README.md">API Access</a></li>
+                    <li><a href="https://github.com/AristarhUcolov/Anti-Terrorist-Project-Operation-Mirror-Cloud/blob/main/README.md">Contribute</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Emergency Contacts</h4>
+                <ul>
+                    <li><a href="https://www.interpol.int">Interpol</a></li>
+                    <li><a href="https://tips.fbi.gov/home">FBI</a></li>
+                    <li><a href="http://www.fsb.ru/fsb/supplement.htm">FSB</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>System Info</h4>
+                <div class="system-info">
+                    <span>Version: 2.4.1</span>
+                    <span>Last Update: <span id="last-update">Loading...</span></span>
+                    <span>Database Size: <span id="db-size">Loading...</span></span>
+                </div>
+            </div>
+        </div>
+    </footer>
     
-			card.innerHTML = `
-				<img src="${item.image}" alt="${category === 'people' ? item.name : item.model}">
-				<h3>${category === 'people' ? item.name : item.model}</h3>
-				<p>${category === 'people' ? item.details : `<strong>Номер:</strong> ${item.plate}<br>${item.details}`}</p>
-			`;
-    
-			document.getElementById("resultsContainer").appendChild(card);
-		}
-
-        function searchResults() {
-            const query = document.getElementById("search").value.toLowerCase();
-            document.querySelectorAll(".result-card").forEach(card => {
-                card.style.display = card.innerText.toLowerCase().includes(query) ? "block" : "none";
-            });
-        }
-
-        function reportTerrorist() {
-            alert("Функция сообщения о террористе пока в разработке. Но можете сообщить в GitHub Профиле и я обязательно добавлю в базу, либо сообщите об этом в разные Госс.Органы такие как ФСБ, ФБР, Интерпол и т.г");
-        }
-    </script>
-    
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            background: black; 
-            color: white; 
-            text-align: center; 
-        }
-        header { 
-            padding: 20px; 
-            background: darkred; 
-        }
-        button { 
-            padding: 10px; 
-            background: red; 
-            border: none; 
-            color: white; 
-            cursor: pointer; 
-        }
-        select, input { 
-            padding: 10px; 
-            margin-top: 10px; 
-        }
-        #resultsContainer {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: center;
-			gap: 20px;
-		}
-		.result-card { 
-			background: gray; 
-			padding: 10px; 
-			width: 300px; /* Фиксированная ширина */
-			border-radius: 10px; 
-			text-align: center; 
-		}
-		.result-card img { 
-			width: 100%; /* Картинка занимает всю ширину карточки */
-			height: auto; /* Автоматическая адаптация высоты */
-			border-radius: 10px; 
-		}
-    </style>
+    <!-- Скрипты -->
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/database.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/advanced.js"></script>
 </body>
 </html>
