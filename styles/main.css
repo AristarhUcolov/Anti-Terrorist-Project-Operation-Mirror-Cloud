@@ -1325,3 +1325,133 @@ a:hover {
     padding: 0.5rem;
     border-radius: 4px;
 }
+
+/* Audio controls styling */
+#background-music, #hover-sound, #click-sound, #table-hover-sound {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Sound control button */
+#sound-toggle {
+    margin-right: 10px;
+}
+
+/* Hover effects for interactive elements */
+button, a, .dashboard-card, .result-card, table, tr, td, th {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover, a:hover {
+    transform: translateY(-2px);
+}
+
+.dashboard-card:hover, .result-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+table tr:hover {
+    background-color: rgba(0, 255, 157, 0.1);
+}
+
+/* Map specific styles */
+#world-map {
+    height: 600px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.map-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+}
+
+.map-legend {
+    display: flex;
+    gap: 1rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.legend-color {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+.legend-color.high-risk {
+    background-color: var(--danger-color);
+}
+
+.legend-color.medium-risk {
+    background-color: var(--warning-color);
+}
+
+.legend-color.low-risk {
+    background-color: var(--info-color);
+}
+
+.map-sidebar {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+/* Analytics specific styles */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.analytics-card {
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+}
+
+.analytics-card.wide {
+    grid-column: span 2;
+}
+
+.card-content canvas {
+    width: 100% !important;
+    height: 300px !important;
+}
+
+#network-graph-container {
+    width: 100%;
+    height: 500px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.time-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.time-filter select {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.5rem;
+    border-radius: 4px;
+}

@@ -11,6 +11,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oxanium:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    
+    <!-- Audio Elements -->
+    <audio id="background-music" loop>
+        <source src="assets/audio/background.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="hover-sound">
+        <source src="assets/audio/hover.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="click-sound">
+        <source src="assets/audio/click.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="table-hover-sound">
+        <source src="assets/audio/table-hover.mp3" type="audio/mpeg">
+    </audio>
 </head>
 <body class="dark-theme">
     <!-- Системные уведомления -->
@@ -45,6 +59,9 @@
             </nav>
             
             <div class="user-controls">
+                <button id="sound-toggle" class="icon-button" title="Toggle sound">
+                    <i class="fas fa-volume-up"></i>
+                </button>
                 <button id="theme-toggle" class="icon-button" title="Toggle theme">
                     <i class="fas fa-moon"></i>
                 </button>

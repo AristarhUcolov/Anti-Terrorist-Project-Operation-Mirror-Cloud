@@ -1,7 +1,16 @@
 // Main application module
 
+// Audio elements
+const backgroundMusic = document.getElementById('background-music');
+const hoverSound = document.getElementById('hover-sound');
+const clickSound = document.getElementById('click-sound');
+const tableHoverSound = document.getElementById('table-hover-sound');
+
 // Инициализация приложения
 document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация звуков
+    initAudio();
+    
     // Инициализация тем
     initTheme();
     
@@ -24,6 +33,63 @@ document.addEventListener('DOMContentLoaded', function() {
     initDatabaseCards();
 });
 
+// Инициализация аудио
+function initAudio() {
+    // Установка громкости
+    backgroundMusic.volume = 0.2;
+    hoverSound.volume = 1.0;
+    clickSound.volume = 0.5;
+    tableHoverSound.volume = 1.0;
+
+    // Обработчик для кнопки звука
+    document.getElementById('sound-toggle').addEventListener('click', function() {
+        if (backgroundMusic.paused) {
+            backgroundMusic.play();
+            this.innerHTML = '<i class="fas fa-volume-up"></i>';
+            localStorage.setItem('soundEnabled', 'true');
+        } else {
+            backgroundMusic.pause();
+            this.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            localStorage.setItem('soundEnabled', 'false');
+        }
+    });
+
+    // Проверка сохранённого состояния звука
+    if (localStorage.getItem('soundEnabled') !== 'false') {
+        // Автовоспроизведение после взаимодействия пользователя
+        document.body.addEventListener('click', function initAudioFirstClick() {
+            backgroundMusic.play().catch(e => console.log("Autoplay prevented:", e));
+            document.body.removeEventListener('click', initAudioFirstClick);
+        }, { once: true });
+    } else {
+        document.getElementById('sound-toggle').innerHTML = '<i class="fas fa-volume-mute"></i>';
+    }
+
+    // Добавление звуков при наведении и клике
+    document.querySelectorAll('a, button, .nav-link, .icon-button').forEach(el => {
+        el.addEventListener('mouseenter', () => playSound(hoverSound));
+        el.addEventListener('click', () => playSound(clickSound));
+    });
+
+    // Специальные звуки для таблиц и карточек
+    document.querySelectorAll('table, tr, td, th, .dashboard-card, .result-card').forEach(el => {
+        el.addEventListener('mouseenter', () => playSound(tableHoverSound));
+        el.addEventListener('click', () => playSound(clickSound));
+    });
+}
+
+// Воспроизведение звука с проверкой
+function playSound(soundElement) {
+    if (backgroundMusic.paused) return;
+    
+    try {
+        soundElement.currentTime = 0;
+        soundElement.play().catch(e => console.log("Sound play failed:", e));
+    } catch (e) {
+        console.error("Error playing sound:", e);
+    }
+}
+
 // Управление темами
 function initTheme() {
     const themeToggle = document.getElementById('theme-toggle');
@@ -35,6 +101,7 @@ function initTheme() {
     
     // Переключение темы
     themeToggle.addEventListener('click', function() {
+        playSound(clickSound);
         const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         
@@ -53,6 +120,7 @@ function initNavigation() {
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
+            playSound(clickSound);
             
             // Удаляем активный класс у всех ссылок
             navLinks.forEach(l => l.classList.remove('active'));
@@ -79,12 +147,14 @@ function initModals() {
     
     // Закрытие модального окна
     closeBtn.addEventListener('click', function() {
+        playSound(clickSound);
         modal.style.display = 'none';
     });
     
     // Закрытие при клике вне окна
     window.addEventListener('click', function(e) {
         if (e.target === modal) {
+            playSound(clickSound);
             modal.style.display = 'none';
         }
     });
@@ -195,12 +265,14 @@ function initFilters() {
     
     // Применение фильтров
     applyFiltersBtn.addEventListener('click', function() {
+        playSound(clickSound);
         // Здесь будет логика фильтрации
         showSystemAlert('Filters applied successfully', 'success');
     });
     
     // Сброс фильтров
     resetFiltersBtn.addEventListener('click', function() {
+        playSound(clickSound);
         document.querySelectorAll('#country-filter option, #category-filter option, #risk-filter option').forEach(option => {
             option.selected = option.value === 'all';
         });
@@ -235,6 +307,7 @@ function showSystemAlert(message, type = 'info') {
     
     // Ручное закрытие
     alert.querySelector('.alert-close').addEventListener('click', function() {
+        playSound(clickSound);
         alert.classList.add('fade-out');
         setTimeout(() => alert.remove(), 300);
     });
@@ -322,6 +395,7 @@ function initDatabaseCards() {
                 
                 // Обработчик клика для открытия детальной информации
                 card.addEventListener('click', function() {
+                    playSound(clickSound);
                     openDetailModal(item, category);
                 });
                 
@@ -436,6 +510,11 @@ function openDetailModal(item, category) {
             </div>
         `;
     }
+    
+    // Добавляем обработчики для кнопок в модальном окне
+    modalBody.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => playSound(clickSound));
+    });
     
     // Показываем модальное окно
     modal.style.display = 'block';

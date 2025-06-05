@@ -3,104 +3,144 @@ import TerrorWatchDB from './database.js';
 
 // Initialize advanced features
 export function initAdvancedFeatures() {
-    initWorldMap();
-    initAnalyticsCharts();
-    initReportForm();
-    initExportSystem();
-    initCompareSystem();
-    initNetworkGraph();
+    try {
+        initWorldMap();
+        initAnalyticsCharts();
+        initReportForm();
+        initExportSystem();
+        initCompareSystem();
+        initNetworkGraph();
+    } catch (e) {
+        console.error("Error initializing advanced features:", e);
+        showSystemAlert('Error initializing advanced features', 'danger');
+    }
 }
 
-// Initialize world map
+// Initialize world map with error handling
 function initWorldMap() {
-    const map = L.map('world-map').setView([20, 0], 2);
-    
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    
-    // Add markers from database
-    const markers = {
-        people: L.layerGroup(),
-        vehicles: L.layerGroup(),
-        organizations: L.layerGroup()
-    };
-    
-    Object.values(markers).forEach(layer => layer.addTo(map));
-    
-    // Add people markers
-    TerrorWatchDB.search("", { category: "people" }).forEach(person => {
-        if (person.locations && person.locations.length > 0) {
-            // For demo, just place randomly in the country
-            const countryCoords = getCountryCoordinates(person.country);
-            const lat = countryCoords.lat + (Math.random() * 4 - 2);
-            const lng = countryCoords.lng + (Math.random() * 4 - 2);
-            
-            const marker = L.circleMarker([lat, lng], {
-                radius: 8,
-                fillColor: getRiskColor(person.risk),
-                color: '#fff',
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            }).addTo(markers.people);
-            
-            marker.bindPopup(`
-                <h3>${person.name}</h3>
-                <p><strong>Risk:</strong> <span class="risk-level ${person.risk}">${person.risk.toUpperCase()}</span></p>
-                <p>${person.details}</p>
-                <button class="map-view-profile" data-id="${person.id}">View Profile</button>
-            `);
-            
-            marker.on('click', updateMapSidebar(person));
+    const mapElement = document.getElementById('world-map');
+    if (!mapElement) {
+        console.error("World map element not found");
+        showSystemAlert('Map initialization failed - element not found', 'danger');
+        return;
+    }
+
+    try {
+        const map = L.map('world-map').setView([20, 0], 2);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Удаляем placeholder если карта загрузилась
+        const placeholder = document.querySelector('.map-placeholder');
+        if (placeholder) {
+            placeholder.style.display = 'none';
         }
-    });
-    
-    // Add vehicle markers
-    TerrorWatchDB.search("", { category: "vehicles" }).forEach(vehicle => {
-        if (vehicle.locations && vehicle.locations.length > 0) {
-            const countryCoords = getCountryCoordinates(vehicle.country);
-            const lat = countryCoords.lat + (Math.random() * 4 - 2);
-            const lng = countryCoords.lng + (Math.random() * 4 - 2);
-            
-            const marker = L.circleMarker([lat, lng], {
-                radius: 8,
-                fillColor: getRiskColor(vehicle.risk),
-                color: '#fff',
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            }).addTo(markers.vehicles);
-            
-            marker.bindPopup(`
-                <h3>${vehicle.model}</h3>
-                <p><strong>Plate:</strong> ${vehicle.plate}</p>
-                <p><strong>Risk:</strong> <span class="risk-level ${vehicle.risk}">${vehicle.risk.toUpperCase()}</span></p>
-                <p>${vehicle.details}</p>
-                <button class="map-view-profile" data-id="${vehicle.id}">View Profile</button>
-            `);
-            
-            marker.on('click', updateMapSidebar(vehicle));
-        }
-    });
-    
-    // Layer control
-    document.getElementById('show-people-layer').addEventListener('change', function(e) {
-        e.target.checked ? map.addLayer(markers.people) : map.removeLayer(markers.people);
-    });
-    
-    document.getElementById('show-vehicles-layer').addEventListener('change', function(e) {
-        e.target.checked ? map.addLayer(markers.vehicles) : map.removeLayer(markers.vehicles);
-    });
-    
-    document.getElementById('show-organizations-layer').addEventListener('change', function(e) {
-        e.target.checked ? map.addLayer(markers.organizations) : map.removeLayer(markers.organizations);
-    });
-    
-    // Map controls
-    document.getElementById('map-zoom-in').addEventListener('click', () => map.zoomIn());
-    document.getElementById('map-zoom-out').addEventListener('click', () => map.zoomOut());
-    document.getElementById('map-reset').addEventListener('click', () => map.setView([20, 0], 2));
+
+        // Add markers from database
+        const markers = {
+            people: L.layerGroup(),
+            vehicles: L.layerGroup(),
+            organizations: L.layerGroup()
+        };
+        
+        Object.values(markers).forEach(layer => layer.addTo(map));
+        
+        // Add people markers
+        TerrorWatchDB.search("", { category: "people" }).forEach(person => {
+            if (person.locations && person.locations.length > 0) {
+                const countryCoords = getCountryCoordinates(person.country);
+                const lat = countryCoords.lat + (Math.random() * 4 - 2);
+                const lng = countryCoords.lng + (Math.random() * 4 - 2);
+                
+                const marker = L.circleMarker([lat, lng], {
+                    radius: 8,
+                    fillColor: getRiskColor(person.risk),
+                    color: '#fff',
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(markers.people);
+                
+                marker.bindPopup(`
+                    <h3>${person.name}</h3>
+                    <p><strong>Risk:</strong> <span class="risk-level ${person.risk}">${person.risk.toUpperCase()}</span></p>
+                    <p>${person.details}</p>
+                    <button class="map-view-profile" data-id="${person.id}">View Profile</button>
+                `);
+                
+                marker.on('click', function(e) {
+                    updateMapSidebar(person)();
+                    document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
+                });
+            }
+        });
+        
+        // Add vehicle markers
+        TerrorWatchDB.search("", { category: "vehicles" }).forEach(vehicle => {
+            if (vehicle.locations && vehicle.locations.length > 0) {
+                const countryCoords = getCountryCoordinates(vehicle.country);
+                const lat = countryCoords.lat + (Math.random() * 4 - 2);
+                const lng = countryCoords.lng + (Math.random() * 4 - 2);
+                
+                const marker = L.circleMarker([lat, lng], {
+                    radius: 8,
+                    fillColor: getRiskColor(vehicle.risk),
+                    color: '#fff',
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(markers.vehicles);
+                
+                marker.bindPopup(`
+                    <h3>${vehicle.model}</h3>
+                    <p><strong>Plate:</strong> ${vehicle.plate}</p>
+                    <p><strong>Risk:</strong> <span class="risk-level ${vehicle.risk}">${vehicle.risk.toUpperCase()}</span></p>
+                    <p>${vehicle.details}</p>
+                    <button class="map-view-profile" data-id="${vehicle.id}">View Profile</button>
+                `);
+                
+                marker.on('click', function(e) {
+                    updateMapSidebar(vehicle)();
+                    document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
+                });
+            }
+        });
+        
+        // Layer control
+        document.getElementById('show-people-layer').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(markers.people) : map.removeLayer(markers.people);
+        });
+        
+        document.getElementById('show-vehicles-layer').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(markers.vehicles) : map.removeLayer(markers.vehicles);
+        });
+        
+        document.getElementById('show-organizations-layer').addEventListener('change', function(e) {
+            e.target.checked ? map.addLayer(markers.organizations) : map.removeLayer(markers.organizations);
+        });
+        
+        // Map controls
+        document.getElementById('map-zoom-in').addEventListener('click', () => {
+            document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
+            map.zoomIn();
+        });
+        
+        document.getElementById('map-zoom-out').addEventListener('click', () => {
+            document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
+            map.zoomOut();
+        });
+        
+        document.getElementById('map-reset').addEventListener('click', () => {
+            document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
+            map.setView([20, 0], 2);
+        });
+        
+    } catch (e) {
+        console.error("Error initializing map:", e);
+        showSystemAlert('Error initializing world map', 'danger');
+    }
     
     // Helper to update sidebar when marker is clicked
     function updateMapSidebar(item) {
@@ -119,6 +159,7 @@ function initWorldMap() {
             
             // Add click handler for view profile button
             sidebarContent.querySelector('.view-profile-btn').addEventListener('click', function() {
+                document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
                 const itemId = this.dataset.id;
                 const item = TerrorWatchDB.getById(itemId);
                 if (item) {
@@ -150,100 +191,119 @@ function getRiskColor(risk) {
     }
 }
 
-// Initialize analytics charts
+// Initialize analytics charts with error handling
 function initAnalyticsCharts() {
-    const stats = TerrorWatchDB.getStatistics();
-    
-    // Timeline chart
-    const timelineCtx = document.getElementById('activity-timeline-chart').getContext('2d');
-    const timelineChart = new Chart(timelineCtx, {
-        type: 'line',
-        data: {
-            labels: Array.from({length: 30}, (_, i) => {
-                const date = new Date();
-                date.setDate(date.getDate() - (30 - i));
-                return date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
-            }),
-            datasets: [{
-                label: 'Threat Activity',
-                data: Array.from({length: 30}, () => Math.floor(Math.random() * 100)),
-                borderColor: 'rgba(0, 180, 255, 0.8)',
-                backgroundColor: 'rgba(0, 180, 255, 0.2)',
-                tension: 0.3,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
+    try {
+        const stats = TerrorWatchDB.getStatistics();
+        
+        // Timeline chart
+        const timelineCtx = document.getElementById('activity-timeline-chart');
+        if (!timelineCtx) {
+            console.error("Timeline chart canvas not found");
+            return;
+        }
+        
+        const timelineChart = new Chart(timelineCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 30}, (_, i) => {
+                    const date = new Date();
+                    date.setDate(date.getDate() - (30 - i));
+                    return date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
+                }),
+                datasets: [{
+                    label: 'Threat Activity',
+                    data: Array.from({length: 30}, () => Math.floor(Math.random() * 100)),
+                    borderColor: 'rgba(0, 180, 255, 0.8)',
+                    backgroundColor: 'rgba(0, 180, 255, 0.2)',
+                    tension: 0.3,
+                    fill: true
+                }]
             },
-            scales: {
-                y: { beginAtZero: true }
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
             }
-        }
-    });
-    
-    // Region distribution chart
-    const regionCtx = document.getElementById('region-distribution-chart').getContext('2d');
-    const regionChart = new Chart(regionCtx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(stats.byCountry),
-            datasets: [{
-                data: Object.values(stats.byCountry).map(c => c.people),
-                backgroundColor: [
-                    'rgba(255, 56, 96, 0.7)',
-                    'rgba(255, 221, 87, 0.7)',
-                    'rgba(32, 156, 238, 0.7)'
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom' }
-            }
-        }
-    });
-    
-    // Category distribution chart
-    const categoryCtx = document.getElementById('category-distribution-chart').getContext('2d');
-    const categoryChart = new Chart(categoryCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Operatives', 'Logistics', 'Recruiters', 'Financiers', 'Cyber'],
-            datasets: [{
-                label: 'Suspect Categories',
-                data: [65, 40, 30, 25, 15],
-                backgroundColor: 'rgba(0, 255, 157, 0.7)'
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: { beginAtZero: true }
-            }
-        }
-    });
-    
-    // Time range filter
-    document.getElementById('analytics-time-range').addEventListener('change', function() {
-        const days = parseInt(this.value);
-        const newData = Array.from({length: days}, () => Math.floor(Math.random() * 100));
-        const newLabels = Array.from({length: days}, (_, i) => {
-            const date = new Date();
-            date.setDate(date.getDate() - (days - i));
-            return date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
         });
         
-        timelineChart.data.labels = newLabels;
-        timelineChart.data.datasets[0].data = newData;
-        timelineChart.update();
-    });
+        // Region distribution chart
+        const regionCtx = document.getElementById('region-distribution-chart');
+        if (regionCtx) {
+            new Chart(regionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(stats.byCountry),
+                    datasets: [{
+                        data: Object.values(stats.byCountry).map(c => c.people),
+                        backgroundColor: [
+                            'rgba(255, 56, 96, 0.7)',
+                            'rgba(255, 221, 87, 0.7)',
+                            'rgba(32, 156, 238, 0.7)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+        
+        // Category distribution chart
+        const categoryCtx = document.getElementById('category-distribution-chart');
+        if (categoryCtx) {
+            new Chart(categoryCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Operatives', 'Logistics', 'Recruiters', 'Financiers', 'Cyber'],
+                    datasets: [{
+                        label: 'Suspect Categories',
+                        data: [65, 40, 30, 25, 15],
+                        backgroundColor: 'rgba(0, 255, 157, 0.7)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+        
+        // Time range filter
+        const timeRangeSelect = document.getElementById('analytics-time-range');
+        if (timeRangeSelect) {
+            timeRangeSelect.addEventListener('change', function() {
+                document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
+                const days = parseInt(this.value);
+                const newData = Array.from({length: days}, () => Math.floor(Math.random() * 100));
+                const newLabels = Array.from({length: days}, (_, i) => {
+                    const date = new Date();
+                    date.setDate(date.getDate() - (days - i));
+                    return date.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
+                });
+                
+                timelineChart.data.labels = newLabels;
+                timelineChart.data.datasets[0].data = newData;
+                timelineChart.update();
+            });
+        }
+        
+    } catch (e) {
+        console.error("Error initializing analytics charts:", e);
+        showSystemAlert('Error initializing analytics', 'danger');
+    }
 }
 
 // Initialize report form
@@ -278,8 +338,8 @@ function initReportForm() {
                 }
                 
                 previewItem.querySelector('.remove-media').addEventListener('click', function() {
+                    document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
                     previewItem.remove();
-                    // Note: In a real app, you'd need to update the FileList
                 });
                 
                 mediaPreview.appendChild(previewItem);
@@ -291,6 +351,7 @@ function initReportForm() {
     // Form submission
     form.addEventListener('submit', function(e) {
         e.preventDefault();
+        document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
         
         // Show success message
         showSystemAlert('Report submitted successfully. Thank you for your contribution.', 'success');
@@ -298,17 +359,13 @@ function initReportForm() {
         // Reset form
         form.reset();
         mediaPreview.innerHTML = '';
-        
-        // In a real app, you would send the data to a server here
-        const formData = new FormData(form);
-        console.log('Report data:', Object.fromEntries(formData.entries()));
     });
     
     // Emergency button
     document.getElementById('call-emergency').addEventListener('click', function() {
+        document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
         if (confirm('Are you in immediate danger? Confirm to be redirected to emergency services.')) {
             alert('Redirecting to emergency services...');
-            // In a real app, this would redirect to local emergency services
         }
     });
 }
@@ -316,19 +373,12 @@ function initReportForm() {
 // Initialize export system
 function initExportSystem() {
     const exportModal = document.getElementById('export-modal');
-    const exportBtn = document.querySelector('.detail-actions .secondary-button');
     const generateBtn = document.getElementById('generate-export');
     const progressBar = document.getElementById('export-progress');
     
-    // Open export modal from detail view
-    if (exportBtn) {
-        exportBtn.addEventListener('click', function() {
-            exportModal.style.display = 'block';
-        });
-    }
-    
     // Generate export
     generateBtn.addEventListener('click', function() {
+        document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
         const format = document.querySelector('input[name="export-format"]:checked').value;
         const options = {
             profile: document.getElementById('export-profile').checked,
@@ -383,10 +433,14 @@ function initCompareSystem() {
     compareBtn.innerHTML = '<i class="fas fa-not-equal"></i> Compare';
     
     // Add compare button to detail view
-    document.querySelector('.detail-actions').appendChild(compareBtn);
+    const detailActions = document.querySelector('.detail-actions');
+    if (detailActions) {
+        detailActions.appendChild(compareBtn);
+    }
     
     // Open compare modal
     compareBtn.addEventListener('click', function() {
+        document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
         compareModal.style.display = 'block';
         
         // Populate select options
@@ -404,6 +458,7 @@ function initCompareSystem() {
     // Update compare content when selection changes
     document.querySelectorAll('.compare-select').forEach(select => {
         select.addEventListener('change', function() {
+            document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
             const container = this.closest('.compare-item').querySelector('.compare-content');
             const id = this.value;
             
@@ -436,6 +491,7 @@ function initCompareSystem() {
     
     // Swap profiles
     document.getElementById('swap-profiles').addEventListener('click', function() {
+        document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
         const select1 = document.querySelector('#compare-item-1 .compare-select');
         const select2 = document.querySelector('#compare-item-2 .compare-select');
         const temp = select1.value;
@@ -513,85 +569,145 @@ function initCompareSystem() {
 // Initialize network graph
 function initNetworkGraph() {
     const container = document.getElementById('network-graph-container');
+    if (!container) return;
     
-    // Create nodes from database
-    const nodes = new vis.DataSet([
-        // Add some sample nodes (in a real app, this would be generated from the database)
-        { id: 1, label: "Unknown Name", group: "person", title: "Suspected leader in Syria" },
-        { id: 2, label: "Toyota Land Cruiser", group: "vehicle", title: "Used in multiple attacks" },
-        { id: 3, label: "Al-Nusra Cell", group: "organization", title: "Terrorist organization" },
-        { id: 4, label: "Unknown Name", group: "person", title: "Logistics coordinator" },
-        { id: 5, label: "Weapons Cache", group: "location", title: "Discovered" }
-    ]);
-    
-    // Create edges (connections)
-    const edges = new vis.DataSet([
-        { from: 1, to: 2, label: "uses" },
-        { from: 1, to: 3, label: "leads" },
-        { from: 1, to: 4, label: "commands" },
-        { from: 4, to: 5, label: "manages" },
-        { from: 3, to: 5, label: "uses" }
-    ]);
-    
-    const data = { nodes, edges };
-    const options = {
-        nodes: {
-            shape: 'dot',
-            size: 16,
-            font: { size: 12, face: 'Oxanium' },
-            borderWidth: 2
-        },
-        edges: {
-            width: 2,
-            font: { size: 10, face: 'Oxanium' },
-            arrows: { to: { enabled: true, scaleFactor: 0.5 } },
-            smooth: { enabled: true, type: 'continuous' }
-        },
-        groups: {
-            person: { color: { border: '#fff', background: '#ff3860', highlight: { border: '#fff', background: '#ff3860' } } },
-            vehicle: { color: { border: '#fff', background: '#ffdd57', highlight: { border: '#fff', background: '#ffdd57' } } },
-            organization: { color: { border: '#fff', background: '#209cee', highlight: { border: '#fff', background: '#209cee' } } },
-            location: { color: { border: '#fff', background: '#00ff9d', highlight: { border: '#fff', background: '#00ff9d' } } }
-        },
-        physics: {
-            barnesHut: {
-                gravitationalConstant: -2000,
-                centralGravity: 0.3,
-                springLength: 95,
-                springConstant: 0.04,
-                damping: 0.09
+    try {
+        // Create nodes from database
+        const nodes = new vis.DataSet([
+            // Add some sample nodes (in a real app, this would be generated from the database)
+            { id: 1, label: "Unknown Name", group: "person", title: "Suspected leader in Syria" },
+            { id: 2, label: "Toyota Land Cruiser", group: "vehicle", title: "Used in multiple attacks" },
+            { id: 3, label: "Al-Nusra Cell", group: "organization", title: "Terrorist organization" },
+            { id: 4, label: "Unknown Name", group: "person", title: "Logistics coordinator" },
+            { id: 5, label: "Weapons Cache", group: "location", title: "Discovered" }
+        ]);
+        
+        // Create edges (connections)
+        const edges = new vis.DataSet([
+            { from: 1, to: 2, label: "uses" },
+            { from: 1, to: 3, label: "leads" },
+            { from: 1, to: 4, label: "commands" },
+            { from: 4, to: 5, label: "manages" },
+            { from: 3, to: 5, label: "uses" }
+        ]);
+        
+        const data = { nodes, edges };
+        const options = {
+            nodes: {
+                shape: 'dot',
+                size: 16,
+                font: { size: 12, face: 'Oxanium' },
+                borderWidth: 2
+            },
+            edges: {
+                width: 2,
+                font: { size: 10, face: 'Oxanium' },
+                arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+                smooth: { enabled: true, type: 'continuous' }
+            },
+            groups: {
+                person: { color: { border: '#fff', background: '#ff3860', highlight: { border: '#fff', background: '#ff3860' } } },
+                vehicle: { color: { border: '#fff', background: '#ffdd57', highlight: { border: '#fff', background: '#ffdd57' } } },
+                organization: { color: { border: '#fff', background: '#209cee', highlight: { border: '#fff', background: '#209cee' } } },
+                location: { color: { border: '#fff', background: '#00ff9d', highlight: { border: '#fff', background: '#00ff9d' } } }
+            },
+            physics: {
+                barnesHut: {
+                    gravitationalConstant: -2000,
+                    centralGravity: 0.3,
+                    springLength: 95,
+                    springConstant: 0.04,
+                    damping: 0.09
+                }
             }
-        }
-    };
-    
-    const network = new vis.Network(container, data, options);
-    
-    // Graph controls
-    document.getElementById('reset-graph').addEventListener('click', () => {
-        network.fit({ animation: { duration: 1000, easingFunction: 'easeInOutQuad' } });
-    });
-    
-    document.getElementById('zoom-in-graph').addEventListener('click', () => {
-        const scale = network.getScale();
-        network.moveTo({ scale: scale * 1.2, animation: true });
-    });
-    
-    document.getElementById('zoom-out-graph').addEventListener('click', () => {
-        const scale = network.getScale();
-        network.moveTo({ scale: scale / 1.2, animation: true });
-    });
-    
-    // Handle node clicks to open profiles
-    network.on('click', function(params) {
-        if (params.nodes.length === 1) {
-            const nodeId = params.nodes[0];
-            const node = nodes.get(nodeId);
-            
-            // In a real app, you would match this to your database
-            if (node) {
-                // Simulate opening a profile
-                console.log('Opening profile for:', node.label);
+        };
+        
+        const network = new vis.Network(container, data, options);
+        
+        // Graph controls
+        document.getElementById('reset-graph').addEventListener('click', () => {
+            document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
+            network.fit({ animation: { duration: 1000, easingFunction: 'easeInOutQuad' } });
+        });
+        
+        document.getElementById('zoom-in-graph').addEventListener('click', () => {
+            document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
+            const scale = network.getScale();
+            network.moveTo({ scale: scale * 1.2, animation: true });
+        });
+        
+        document.getElementById('zoom-out-graph').addEventListener('click', () => {
+            document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
+            const scale = network.getScale();
+            network.moveTo({ scale: scale / 1.2, animation: true });
+        });
+        
+        // Handle node clicks to open profiles
+        network.on('click', function(params) {
+            document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
+            if (params.nodes.length === 1) {
+                const nodeId = params.nodes[0];
+                const node = nodes.get(nodeId);
+                
+                // In a real app, you would match this to your database
+                if (node) {
+                    // Simulate opening a profile
+                    console.log('Opening profile for:', node.label);
+                }
             }
-        }
+        });
+        
+    } catch (e) {
+        console.error("Error initializing network graph:", e);
+        showSystemAlert('Error initializing network graph', 'danger');
+    }
+}
+
+// Helper function to show system alerts
+function showSystemAlert(message, type = 'info') {
+    const alertsContainer = document.getElementById('system-alerts');
+    if (!alertsContainer) return;
+    
+    const alert = document.createElement('div');
+    alert.className = `system-alert ${type}`;
+    alert.innerHTML = `
+        <i class="fas fa-${type === 'danger' ? 'exclamation-triangle' : type === 'warning' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+        <button class="alert-close"><i class="fas fa-times"></i></button>
+    `;
+    
+    alertsContainer.appendChild(alert);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        alert.classList.add('fade-out');
+        setTimeout(() => alert.remove(), 300);
+    }, 5000);
+    
+    // Manual close
+    alert.querySelector('.alert-close').addEventListener('click', function() {
+        document.getElementById('click-sound').play().catch(e => console.log("Click sound failed:", e));
+        alert.classList.add('fade-out');
+        setTimeout(() => alert.remove(), 300);
     });
+}
+
+// Helper function to open detail modal
+function openDetailModal(item) {
+    const modal = document.getElementById('detail-modal');
+    if (!modal) return;
+    
+    const modalBody = document.querySelector('.modal-body');
+    if (!modalBody) return;
+    
+    // Fill modal with item data (implementation depends on your item structure)
+    // This is a simplified version - adjust according to your needs
+    modalBody.innerHTML = `
+        <h2>${item.name || item.model}</h2>
+        <p><strong>Type:</strong> ${item.category}</p>
+        <p><strong>Risk:</strong> <span class="risk-level ${item.risk}">${item.risk.toUpperCase()}</span></p>
+        <p>${item.details}</p>
+    `;
+    
+    modal.style.display = 'block';
 }
