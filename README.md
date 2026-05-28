@@ -1,8 +1,8 @@
 # 🛡️ Anti-Terrorist Project: Operation Mirror Cloud
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![GitHub Pages](https://img.shields.io/badge/Demo-GitHub%20Pages-green)](https://aristarhucolov.github.io/Anti-Terrorist-Project-Operation-Mirror-Cloud/)
-[![Version](https://img.shields.io/badge/Version-2.4.1-orange)](https://github.com/AristarhUcolov/Anti-Terrorist-Project-Operation-Mirror-Cloud)
+[![GitHub Pages](https://img.shields.io/badge/Demo-GitHub%20Pages-green)](https://clearnetsky.github.io/Anti-Terrorist-Project-Operation-Mirror-Cloud/)
+[![Version](https://img.shields.io/badge/Version-2.4.1-orange)](https://github.com/ClearNetSky/Anti-Terrorist-Project-Operation-Mirror-Cloud)
 
 > **Author / Автор:** Aristarh Ucolov (Аристарх Уколов)
 
@@ -57,7 +57,7 @@ If you recognize a suspect or notice a vehicle listed in the database, **DO NOT 
 
 ### 🔗 How to Use
 
-1. Open the [live website](https://aristarhucolov.github.io/Anti-Terrorist-Project-Operation-Mirror-Cloud/) or deploy the project locally.
+1. Open the [live website](https://clearnetsky.github.io/Anti-Terrorist-Project-Operation-Mirror-Cloud/) or deploy the project locally.
 2. Navigate using the main menu (Dashboard, Database, Analytics, Global Map, Report).
 3. Select a category (people or vehicles).
 4. Use filters or search to browse information.
@@ -69,7 +69,7 @@ To run this project locally:
 
 ```bash
 # Clone the repository
-git clone https://github.com/AristarhUcolov/Anti-Terrorist-Project-Operation-Mirror-Cloud.git
+git clone https://github.com/ClearNetSky/Anti-Terrorist-Project-Operation-Mirror-Cloud.git
 
 # Navigate to the project directory
 cd Anti-Terrorist-Project-Operation-Mirror-Cloud
@@ -124,7 +124,7 @@ Contributions are welcome! Here's how you can help:
 
 ### 📬 Contact
 
-If you have useful information or questions, create an [issue on GitHub](https://github.com/AristarhUcolov/Anti-Terrorist-Project-Operation-Mirror-Cloud/issues) or reach out through available channels.
+If you have useful information or questions, create an [issue on GitHub](https://github.com/ClearNetSky/Anti-Terrorist-Project-Operation-Mirror-Cloud/issues) or reach out through available channels.
 
 ---
 
@@ -175,7 +175,7 @@ If you have useful information or questions, create an [issue on GitHub](https:/
 
 ### 🔗 Как использовать
 
-1. Откройте [сайт проекта](https://aristarhucolov.github.io/Anti-Terrorist-Project-Operation-Mirror-Cloud/) или разверните проект локально.
+1. Откройте [сайт проекта](https://clearnetsky.github.io/Anti-Terrorist-Project-Operation-Mirror-Cloud/) или разверните проект локально.
 2. Используйте главное меню (Dashboard, Database, Analytics, Global Map, Report).
 3. Выберите категорию (люди или транспорт).
 4. Используйте фильтры или поиск для просмотра данных.
@@ -187,7 +187,7 @@ If you have useful information or questions, create an [issue on GitHub](https:/
 
 ```bash
 # Клонируйте репозиторий
-git clone https://github.com/AristarhUcolov/Anti-Terrorist-Project-Operation-Mirror-Cloud.git
+git clone https://github.com/ClearNetSky/Anti-Terrorist-Project-Operation-Mirror-Cloud.git
 
 # Перейдите в директорию проекта
 cd Anti-Terrorist-Project-Operation-Mirror-Cloud
@@ -242,7 +242,7 @@ Anti-Terrorist-Project-Operation-Mirror-Cloud/
 
 ### 📬 Контакты
 
-Если у вас есть полезная информация или вопросы, создавайте [issue на GitHub](https://github.com/AristarhUcolov/Anti-Terrorist-Project-Operation-Mirror-Cloud/issues) или свяжитесь с нами через доступные каналы.
+Если у вас есть полезная информация или вопросы, создавайте [issue на GitHub](https://github.com/ClearNetSky/Anti-Terrorist-Project-Operation-Mirror-Cloud/issues) или свяжитесь с нами через доступные каналы.
 
 ---
 
